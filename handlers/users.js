@@ -28,6 +28,48 @@ function postNewUserHandler(pool) {
   }
 }
 
+function getUserHandler(pool) {
+  return async(req, res) => {
+    const userId = req.user.userId;
+
+    try {
+      const [rows, _] = await pool.query('SELECT * FROM users WHERE id = ? ', [userId])
+      if(rows.length > 0) {
+        const row = rows[0]
+        res.status(200).json({message: "success", data: row})
+      } else {
+        res.status(404).json({message: "unexpected error: user not found"})
+      }
+    } catch(e) {
+      res.status(500).json({message: "Server Error: " + e.message})
+    }
+  }
+}
+
+function putUserImageHandler(pool) {
+  return async(req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const userId = req.user.userId;
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    try {
+      await pool.query("UPDATE users SET thumb = ? WHERE id = ?", [imageUrl, userId])
+
+      res.status(204).json({
+        message: "image is uploaded and updated",
+        image_url: imageUrl
+      })
+    } catch(e) {
+      res.status(500).json({message: e.message})
+    }
+  }
+}
+
 module.exports = {
   postNewUserHandler,
+  getUserHandler,
+  putUserImageHandler
 }
