@@ -5,7 +5,6 @@ const pool = require('../config/db');
 const jwtMiddleware = require('../tokenize')
 
 const users = require('../handlers/users')
-const userUpload = require('../middleware/image/user')
 
 const auth = require('../handlers/auth')
 
@@ -15,7 +14,7 @@ router.post("/login", auth.postLoginHandler(pool))
 
 // protected routes
 router.get("user", jwtMiddleware, users.getUserHandler(pool))
-router.put("user/image", jwtMiddleware, userUpload.single('image'), users.putUserImageHandler)
+// router.put("user/image", jwtMiddleware, userUpload.single('image'), users.putUserImageHandler)
 
 // router.post("receipt")
 // router.post("receipt/image")
