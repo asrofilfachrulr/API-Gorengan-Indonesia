@@ -1,7 +1,7 @@
 require("dotenv").config()
 
 const express = require("express");
-const path = require("path");
+
 const app = express();
 
 const cors = require("cors")
@@ -17,7 +17,7 @@ app.use(
 const router = require('../routes')
 app.use(router)
 
-app.use("/uploads", express.static("uploads"))
+// app.use("/uploads", express.static("uploads"))
 
 const port = process.env.PORT || 8080;
 
