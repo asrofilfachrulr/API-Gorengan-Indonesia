@@ -1,4 +1,4 @@
 # API Gorengan Indonesia
 
 ### ERD Diagram
-![erd](erd.png)
+![erd](db-diagram.png)
