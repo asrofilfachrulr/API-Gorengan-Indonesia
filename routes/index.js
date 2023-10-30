@@ -13,7 +13,7 @@ router.post("/register", users.postNewUserHandler(pool))
 router.post("/login", auth.postLoginHandler(pool))
 
 // protected routes
-router.get("user", jwtMiddleware, users.getUserHandler(pool))
+router.get("/user", jwtMiddleware, users.getUserHandler(pool))
 // router.put("user/image", jwtMiddleware, userUpload.single('image'), users.putUserImageHandler)
 
 // router.post("receipt")
