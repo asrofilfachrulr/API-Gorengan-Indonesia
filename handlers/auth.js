@@ -14,7 +14,13 @@ function postLoginHandler(pool) {
           const token = await jwt.sign({
             userId: data.id
           }, process.env.SECRET_KEY, { expiresIn: '1d' })
-          res.status(200).json({message: 'login success', token})
+          res.status(200).json({message: 'login success', token, account: {
+            id: data.id,
+            name: data.name,
+            username: data.username,
+            email: data.email,
+            img_url: data.img_url
+          }})
         } else {
           res.status(401).json({message: 'invalid credentials'})
         }
