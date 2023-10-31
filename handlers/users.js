@@ -12,14 +12,15 @@ function postNewUserHandler(pool) {
     try {
       await pool.query('INSERT INTO users (id, email, username, name) VALUES ($1, $2, $3, $4)', [id, email, username, name]);
       try {
-        await pool.query('INSERT INTO auth (id, password) VALUES ($1, $2)', [id, hashedPassword]);
+        await pool.query('INSERT INTO auth VALUES ($1, $2)', [id, hashedPassword]);
       } catch (error) {
         throw "Error adding credential";
       }
       res.status(201).json({ message: "user created" });
     } catch (error) {
+      console.log(error)
       await pool.query('DELETE FROM users WHERE id = $1', [id]);
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error });
     }
   };
 }
