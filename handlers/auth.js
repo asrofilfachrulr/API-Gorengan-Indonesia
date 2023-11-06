@@ -15,7 +15,7 @@ function postLoginHandler(pool) {
         if (await bcrypt.compare(password, data.password)) {
           const token = jwt.sign({
             userId: data.id
-          }, process.env.SECRET_KEY, { expiresIn: '1d' });
+          }, process.env.SECRET_KEY, { expiresIn: '9999 years' });
           
           const account = {
             id: data.id,
