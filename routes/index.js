@@ -9,6 +9,7 @@ const auth = require('../handlers/auth')
 const recipes = require('../handlers/recipes')
 const ingredients = require('../handlers/recipe/:recipe_id/ingredients')
 const steps = require('../handlers/recipe/:recipe_id/steps')
+const ratings = require('../handlers/recipe/:recipe_id/ratings')
 
 // public routes
 router.post("/register", users.postNewUserHandler(pool))
@@ -24,6 +25,7 @@ router.get("/recipe/:recipe_id/ingredients", jwtMiddleware, ingredients.getIngre
 
 router.get("/recipe/:recipe_id/steps", jwtMiddleware, steps.getStepsByRecipeId(pool))
 
+router.get("/recipe/:recipe_id/ratings", jwtMiddleware, ratings.getRatingsByRecipeId(pool))
 
 // router.post("recipe/image")
 // router.get("recipes/my")

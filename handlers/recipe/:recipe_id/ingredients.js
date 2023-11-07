@@ -18,7 +18,10 @@ function getIngredientsByRecipeId(pool){
         res.status(404).json({message: `ingredients data is not found for recipe_id: ${recipe_id}`})
       }
     } catch (error) {
-
+      res.status(500).json({
+        error: 'ServerError',
+        message: error.message
+      })
     }
   }
 }

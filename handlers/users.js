@@ -20,7 +20,7 @@ function postNewUserHandler(pool) {
     } catch (error) {
       console.log(error)
       await pool.query('DELETE FROM users WHERE id = $1', [id]);
-      res.status(500).json({ error });
+      res.status(500).json({ error: 'ServerError', message: error.message });
     }
   };
 }
@@ -38,7 +38,7 @@ function getUserHandler(pool) {
         res.status(404).json({ message: "unexpected error: user not found" });
       }
     } catch (e) {
-      res.status(500).json({ message: "Server Error: " + e.message });
+      res.status(500).json({ error: "ServerError ", message: e.message });
     }
   };
 }
@@ -60,7 +60,7 @@ function putUserImageHandler(pool) {
         image_url: imageUrl
       });
     } catch (e) {
-      res.status(500).json({ message: e.message });
+      res.status(500).json({ error: 'ServerError', message: e.message });
     }
   };
 }
