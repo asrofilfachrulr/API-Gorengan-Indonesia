@@ -12,7 +12,8 @@ function getAllRecipes(pool) {
       r.difficulty as difficulty,
       r.portion as portion,
       r.minute_duration as minute_duration,
-      r.star_rating as star_rating
+      r.star_rating as star_rating,
+      u.thumb_url as thumb_url
       FROM recipes r JOIN users u
       ON r.author_id = u.id
       ${limit ? `LIMIT ${limit}`: ''};

@@ -8,7 +8,7 @@ function getRatingsByRecipeId(pool){
       return;
     }
     
-    let queryText = 'SELECT u.username, u.image_url, r.stars, r.like_count, r.comment, r.date FROM ratings r JOIN users u ON r.user_id = u.id WHERE r.recipe_id = $1';
+    let queryText = 'SELECT u.username, u.thumb_url, r.stars, r.like_count, r.comment, r.date FROM ratings r JOIN users u ON r.user_id = u.id WHERE r.recipe_id = $1';
 
     if(order_by == 'date') {
       queryText += ' ORDER BY DATE DESC'
