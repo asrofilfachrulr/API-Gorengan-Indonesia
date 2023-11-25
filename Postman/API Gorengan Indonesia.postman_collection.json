@@ -1,0 +1,1472 @@
+{
+	"info": {
+		"_postman_id": "d8dfa4c1-c198-4585-b9f8-b225e2b8ff23",
+		"name": "API Gorengan Indonesia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28883474"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "POST Valid Login [Asrofil]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contain token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"token\")",
+									"",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"    pm.environment.set(\"token_asrofil\", jsonData.token)",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"asrofil\",\n    \"password\": \"asrofil\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Valid Login [Hasna]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contain token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"token\")",
+									"",
+									"    pm.environment.set(\"token_hasna\", jsonData.token)",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"hasna\",\n    \"password\": \"hasna\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Invalid Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"aaa\",\n    \"password\": \"aaa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Valid Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"anya\",\n    \"password\": \"anya\",\n    \"email\": \"anya@mail.com\",\n    \"name\": \"anya\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Valid Register Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"asrofil\",\n    \"password\": \"asrofil\",\n    \"email\": \"asrofil@mail.com\",\n    \"name\": \"asrofil\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Invalid Register Duplicate Username",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"anya\",\n    \"password\": \"anya\",\n    \"email\": \"xxx@mail.com\",\n    \"name\": \"anya\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Invalid Register Duplicate Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"xxx\",\n    \"password\": \"anya\",\n    \"email\": \"anya@mail.com\",\n    \"name\": \"anya\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Valid Login Created User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contain token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"token\")",
+									"",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"anya\",\n    \"password\": \"anya\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Reset Password Case",
+					"item": [
+						{
+							"name": "POST Valid Register Dummy 01",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"dummy_01\",\n    \"password\": \"dummy_01\",\n    \"email\": \"dummy_01@mail.com\",\n    \"name\": \"Dummy 01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Valid Login Dummy 01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Contain token\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.haveOwnProperty(\"token\")",
+											"",
+											"    pm.environment.set(\"token\", jsonData.token);",
+											"    pm.environment.set(\"token_dummy_01\", jsonData.token)",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"identifier\": \"dummy_01\",\n    \"password\": \"dummy_01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Valid Reset Password Dummy 01",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_dummy_01}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"dummy_01\",\n    \"new_password\": \"Dummy01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/password",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Invalid Reset Password Dummy 01",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_dummy_01}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"WRONG PASSWORD\",\n    \"new_password\": \"Dummy01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/password",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Valid Login Dummy 01 After Changed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Contain token\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.haveOwnProperty(\"token\")",
+											"",
+											"    pm.environment.set(\"token\", jsonData.token);",
+											"    pm.environment.set(\"token_dummy_01\", jsonData.token)",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"identifier\": \"dummy_01\",\n    \"password\": \"Dummy01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET Logged User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Valid User Bio [Asrofil]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_asrofil}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"asrofil\",\n    \"email\": \"riidloa@gmail.com\",\n    \"full_name\": \"Asrofil Fachrul Riidlo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/bio",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"bio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Invalid User Bio [Asrofil]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_asrofil}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"asrofil\",\n    \"email\": \"riidloa@gmail.com\",\n    \"full_name\": \"Asrofil Fachrul Riidlo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/bio",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"bio"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recipe",
+			"item": [
+				{
+					"name": "Rating",
+					"item": [
+						{
+							"name": "GET Ratings by recipe_id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/ratings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"ratings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Ratings by recipe_id ORDER BY date",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/ratings?order_by=date",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"ratings"
+									],
+									"query": [
+										{
+											"key": "order_by",
+											"value": "date"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Rating by recipe_id [Asrofil]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"stars\": 5,\n    \"comment\": \"Cimol-nya enak banget! Gurih dan renyah.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Rating by recipe_id [Hasna]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"stars\": 4,\n    \"comment\": \"Cimol ini rasanya oke. Tidak terlalu pedas.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Rating by recipe_id [Asrofil]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"stars\": 2,\n    \"comment\": \"Cimol-nya biasa aja\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Rating by recipe_id [Hasna]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"stars\": 5,\n    \"comment\": \"Resep cimol terbaik\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Rating by recipe_id [Asrofil]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Rating by recipe_id [Hasna]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-11/rating",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-11",
+										"rating"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Favourite",
+					"item": [
+						{
+							"name": "GET Favourites by recipe_id [Asrofil] Before All",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by recipe_id [Asrofil] 1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-1/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-1",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by recipe_id [Asrofil] 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-10/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-10",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by recipe_id [Asrofil] 3",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-7/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-7",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by Non Exist recipe_id [Asrofil]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/randomrecipeid/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"randomrecipeid",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Favourites by recipe_id [Asrofil] After POST",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by recipe_id [Asrofil] 1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-1/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-1",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by recipe_id [Asrofil] 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-10/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-10",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by recipe_id [Asrofil] 3",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-7/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-7",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by other recipe_id [Asrofil] 3",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-8/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-8",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Favourites by recipe_id [Asrofil] After DELETE",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_asrofil}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Favourites by recipe_id [Hasna] Before All",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by recipe_id [Hasna] 1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-2/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-2",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Favourite by recipe_id [Hasna] 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-8/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-8",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Favourites by recipe_id [Hasna] After POST",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by recipe_id [Hasna] 1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-2/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-2",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Favourite by recipe_id [Hasna] 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/recipe/receipt-8/favourite",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"recipe",
+										"receipt-8",
+										"favourite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Favourites by recipe_id [Hasna] After DELETE",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token_hasna}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/favourites",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"favourites"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET All Recipes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/recipes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Ingredients by recipe_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/recipe/receipt-11/ingredients",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"recipe",
+								"receipt-11",
+								"ingredients"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Steps by recipe_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/recipe/receipt-10/steps",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"recipe",
+								"receipt-10",
+								"steps"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
