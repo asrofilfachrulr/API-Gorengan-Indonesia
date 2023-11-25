@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 // Middleware function to verify JWT
-function verifyToken(req, res, next) {
+function verifyJwtToken(req, res, next) {
   const token = req.headers.authorization; // Extract the JWT from the request header
 
   if (!token) {
@@ -17,4 +17,6 @@ function verifyToken(req, res, next) {
   }
 }
 
-module.exports = verifyToken;
+module.exports = {
+  verifyJwtToken
+};

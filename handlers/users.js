@@ -1,4 +1,5 @@
 const { nanoid } = require("nanoid");
+const { isEmptyString } = require("../utils");
 const bcrypt = require("bcrypt");
 
 function postNewUserHandler(pool) {
@@ -65,8 +66,37 @@ function putUserImageHandler(pool) {
   };
 }
 
+function putUserBioHandler(pool){
+  return async(req, res) => {
+    const { userId } = req.user
+    const { username, full_name, email } = req.body
+
+    if(isEmptyString(username) || isEmptyString(full_name) || isEmptyString(email)){
+      res.status(400).json({
+        message: "ClientError",
+        error: "Invalid data: empty field"
+      })
+      return
+    }
+
+    try {
+      await pool.query("UPDATE users SET username = $1, name = $2, email = $3 WHERE id = $4", [username, full_name, email, userId])
+
+      res.status(200).json({
+        message: "user updated"
+      })
+    } catch (e) {
+      res.status(500).json({
+        error: 'ServerError',
+        message: e.message
+      })
+    }
+  }
+}
+
 module.exports = {
   postNewUserHandler,
   getUserHandler,
-  putUserImageHandler
+  putUserImageHandler,
+  putUserBioHandler
 };
