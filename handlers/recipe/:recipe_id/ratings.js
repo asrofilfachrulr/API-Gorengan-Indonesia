@@ -3,7 +3,7 @@ function getRatingsByRecipeId(pool){
     const { recipe_id } = req.params;
     const { order_by } = req.query;
   
-    let queryText = 'SELECT u.username, u.id, u.thumb_url, r.stars, r.comment, r.date FROM ratings r JOIN users u ON r.user_id = u.id WHERE r.recipe_id = $1';
+    let queryText = 'SELECT u.username, u.thumb_url, r.stars, r.comment, r.date, rs.stars star_avg FROM ratings r JOIN users u ON r.user_id = u.id JOIN recipes rs ON r.recipe_id = rs.id WHERE r.recipe_id = $1';
 
     if(order_by == 'date') {
       queryText += ' ORDER BY DATE DESC'
@@ -15,7 +15,16 @@ function getRatingsByRecipeId(pool){
       if(rows.length > 0){
         res.status(200).json({
           message: 'success',
-          data: rows
+          data: rows.map(row => ({
+            username: row["username"],
+            thumb_url: row["thumb_url"],
+            stars: row["stars"],
+            comment: row["comment"],
+            date: row["date"],
+          })),
+          extra: {
+            star_avg: rows[0]["star_avg"],
+          }
         })
       } else {
         res.status(404).json({message: `ratings data is not found for recipe_id: ${recipe_id}`, data: []})
@@ -45,6 +54,8 @@ function postRatingByRecipeId(pool) {
     try {
       await pool.query("INSERT INTO ratings(user_id, stars, comment, recipe_id, date) VALUES ($1, $2, $3, $4, $5)", [userId, stars, comment, recipe_id, new Date()])
 
+      await updateRating(pool, recipe_id)
+
       res.status(201).json({
         message: 'rating created'
       })
@@ -66,6 +77,8 @@ function putRatingByRecipeId(pool){
     try {
       await pool.query("UPDATE ratings SET stars = $1, comment = $2, date = $3 WHERE recipe_id = $4 AND user_id = $5", [stars, comment, new Date(), recipe_id, userId])
 
+      await updateRating(pool, recipe_id)
+
       res.status(200).json({
         message: 'rating updated'
       })
@@ -86,6 +99,8 @@ function deleteRatingByRecipeId(pool){
     try {
       await pool.query("DELETE FROM ratings WHERE user_id = $1 AND recipe_id = $2", [userId, recipe_id])
 
+      await updateRating(pool, recipe_id)
+
       res.status(200).json({
         message: 'rating deleted'
       })
@@ -96,6 +111,10 @@ function deleteRatingByRecipeId(pool){
       })
     }
   }
+}
+
+async function updateRating(pool, recipeId){
+  await pool.query("update recipes set stars = (select ROUND(AVG(stars), 1) from ratings where recipe_id = $1) where  id = $1", [recipeId])
 }
 
 module.exports = {
