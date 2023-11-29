@@ -11,7 +11,7 @@ function getAllFavourites(pool){
           data: rows.map(row => row["recipe_id"])
         })
       else
-        res.status(400).json({
+        res.status(404).json({
           message: `favourites data is not found for user_id: ${userId}`,
           data: []
       })
