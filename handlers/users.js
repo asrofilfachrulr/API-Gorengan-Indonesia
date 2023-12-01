@@ -1,5 +1,6 @@
 const { nanoid } = require("nanoid");
 const { isEmptyString } = require("../utils");
+const userStorage = require("../services/supabase/storage/user");
 const bcrypt = require("bcrypt");
 
 function postNewUserHandler(pool) {
@@ -46,19 +47,28 @@ function getUserHandler(pool) {
 
 function putUserImageHandler(pool) {
   return async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+    if (!req.uploadedData) {
+      return res.status(500).json({ message: 'Middleware Error!' });
     }
-    const userId = req.user.userId;
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const { prev_path } = req.query;
+
+    const data = req.uploadedData;
+    const userId = req.user.userId;
+    const imagePath = data.path;
+    const imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
 
     try {
-      await pool.query('UPDATE users SET thumb = $1 WHERE id = $2', [imageUrl, userId]);
+      await pool.query('UPDATE users SET image_url = $1, image_path = $2 WHERE id = $3', [imageUrl, imagePath, userId]);
+      
+      if(prev_path || prev_path != "") {
+        await userStorage.remove(prev_path)
+      }
 
-      res.status(204).json({
+      res.status(201).json({
         message: "image is uploaded and updated",
-        image_url: imageUrl
+        image_url: imageUrl,
+        image_path: imagePath
       });
     } catch (e) {
       res.status(500).json({ error: 'ServerError', message: e.message });
