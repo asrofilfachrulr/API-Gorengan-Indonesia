@@ -3,7 +3,7 @@ function getRatingsByRecipeId(pool){
     const { recipe_id } = req.params;
     const { order_by } = req.query;
   
-    let queryText = 'SELECT u.username, u.thumb_url, r.stars, r.comment, r.date, rs.stars star_avg FROM ratings r JOIN users u ON r.user_id = u.id JOIN recipes rs ON r.recipe_id = rs.id WHERE r.recipe_id = $1';
+    let queryText = 'SELECT u.username, u.image_url, r.stars, r.comment, r.date, rs.stars star_avg FROM ratings r JOIN users u ON r.user_id = u.id JOIN recipes rs ON r.recipe_id = rs.id WHERE r.recipe_id = $1';
 
     if(order_by == 'date') {
       queryText += ' ORDER BY DATE DESC'
@@ -17,7 +17,7 @@ function getRatingsByRecipeId(pool){
           message: 'success',
           data: rows.map(row => ({
             username: row["username"],
-            thumb_url: row["thumb_url"],
+            image_url: row["image_url"],
             stars: row["stars"],
             comment: row["comment"],
             date: row["date"],
