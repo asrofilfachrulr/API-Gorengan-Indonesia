@@ -13,7 +13,7 @@ function getAllRecipes(pool) {
       r.portion as portion,
       r.minute_duration as minute_duration,
       r.stars as stars,
-      u.thumb_url as thumb_url
+      u.image_url as image_url
       FROM recipes r JOIN users u
       ON r.author_id = u.id
       ${limit ? `LIMIT ${limit}`: ''};
@@ -33,7 +33,7 @@ function getAllRecipes(pool) {
         })
       }
     } catch (error){
-      res.json(500).json({message: "Server Error: " + e.message})
+      res.status(500).json({message: "Server Error: " + error.message})
     }
   }
 }
