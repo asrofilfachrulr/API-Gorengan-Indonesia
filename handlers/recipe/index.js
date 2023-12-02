@@ -91,7 +91,7 @@ function putRecipe(pool){
     const { title, category, difficulty, portion, minute_duration } = req.body
 
     try {
-      const { rowCount } = await pool.query("UPDATE recipes SET title = $1, category = $2, difficulty = $3, portion = $4, minute_duration = $5 WHERE id = $6 AND author_id = $7", [title, category, difficulty, portion, minute_duration, recipe_id, userId])
+      const { rowCount } = await pool.query("UPDATE recipes SET title = $1, category = $2, difficulty = $3, portion = $4, minute_duration = $5 WHERE id = $6 AND author_id = $7", [title, category.toLowerCase(), difficulty.toLowerCase(), portion, minute_duration, recipe_id, userId])
 
       res.json({
         message: `recipe with id ${recipe_id} is updated`,

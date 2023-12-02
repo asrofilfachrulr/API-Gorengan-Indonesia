@@ -27,7 +27,10 @@ function getRatingsByRecipeId(pool){
           }
         })
       } else {
-        res.status(404).json({message: `ratings data is not found for recipe_id: ${recipe_id}`, data: []})
+        res.json({
+          message: 'success',
+          data: []
+        })
       }
     } catch (error) {
       res.status(500).json({
