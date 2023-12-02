@@ -54,7 +54,7 @@ function putUserImageHandler(pool) {
     const { prev_path } = req.query;
 
     const data = req.uploadedData;
-    const userId = req.user.userId;
+    const { userId } = req.user;
     const imagePath = data.path;
     const imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
 

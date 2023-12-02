@@ -12,6 +12,8 @@ const storageMiddleware = require('../middleware/storage')
 const users = require('../handlers/users')
 const auth = require('../handlers/auth')
 const recipes = require('../handlers/recipes')
+const categories = require("../handlers/categories")
+const recipe = require("../handlers/recipe")
 const ingredients = require('../handlers/recipe/:recipe_id/ingredients')
 const steps = require('../handlers/recipe/:recipe_id/steps')
 const ratings = require('../handlers/recipe/:recipe_id/ratings')
@@ -19,6 +21,7 @@ const favourites = require('../handlers/favourites')
 const favourite = require('../handlers/recipe/:recipe_id/favourite')
 
 const userStorageService = require("../services/supabase/storage/user")
+const recipeStorageService = require("../services/supabase/storage/recipe")
 
 const testStorage = require('../handlers/test/storage')
 
@@ -27,6 +30,8 @@ router.post("/register", users.postNewUserHandler(pool))
 router.post("/login", auth.postLoginHandler(pool))
 
 // protected routes
+
+// user route
 router.get("/user", verifyJwtToken, users.getUserHandler(pool))
 router.put("/user/bio", verifyJwtToken, users.putUserBioHandler(pool))
 router.put(
@@ -37,19 +42,29 @@ router.put(
   users.putUserImageHandler(pool)
 )
 router.put("/user/password", verifyJwtToken, auth.resetPassword(pool))
-// router.put("user/image", verifyJwtToken, userUpload.single('image'), users.putUserImageHandler)
 
+// category route
+router.get("/categories", categories.getCategories(pool))
+
+// recipe route
 router.get("/recipes", verifyJwtToken, recipes.getAllRecipes(pool))
 
+router.post(
+  "/recipe", 
+  verifyJwtToken, 
+  upload.single('file'),
+  storageMiddleware.uploadFile(recipeStorageService),
+  recipe.postRecipe(pool)
+)
+router.put("/recipe/:recipe_id", verifyJwtToken, recipe.putRecipe(pool))
+router.delete("/recipe/:recipe_id", verifyJwtToken, recipe.deleteRecipe(pool))
+
 router.get("/recipe/:recipe_id/ingredients", verifyJwtToken, ingredients.getIngredientsByRecipeId(pool))
-
 router.get("/recipe/:recipe_id/steps", verifyJwtToken, steps.getStepsByRecipeId(pool))
-
 router.get("/recipe/:recipe_id/ratings", verifyJwtToken, ratings.getRatingsByRecipeId(pool))
 router.post("/recipe/:recipe_id/rating", verifyJwtToken, ratings.postRatingByRecipeId(pool))
 router.put("/recipe/:recipe_id/rating", verifyJwtToken, ratings.putRatingByRecipeId(pool))
 router.delete("/recipe/:recipe_id/rating", verifyJwtToken, ratings.deleteRatingByRecipeId(pool))
-
 router.post("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.postFavourite(pool))
 router.delete("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.deleteFavourite(pool))
 
