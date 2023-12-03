@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg');
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -10,4 +10,6 @@ const dbConfig = {
 
 const pool = new Pool(dbConfig);
 
-module.exports = pool;
+module.exports = {
+  pool,
+};

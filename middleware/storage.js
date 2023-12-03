@@ -1,13 +1,13 @@
 function uploadFile(service){
   return async (req, res, next) => {
-    if(!req.file){
+    const file = req.file
+
+    if(!file){
       res.status(400).json({
         message: "no file uploaded"
       })
       return
     }
-
-    const file = req.file
 
     try {
       const data = await service.upload(file.originalname, file.buffer)

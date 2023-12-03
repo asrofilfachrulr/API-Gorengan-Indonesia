@@ -1,13 +1,14 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const pool = require('../config/db');
+const { pool } = require('../config/db');
 
 const memoryStorage = multer.memoryStorage;
 const upload = multer({memoryStorage})
 
 const {verifyJwtToken} = require('../middleware/jwt')
 const storageMiddleware = require('../middleware/storage')
+const recipeMiddleware = require("../middleware/recipe")
 
 const users = require('../handlers/users')
 const auth = require('../handlers/auth')
@@ -49,6 +50,7 @@ router.get("/categories", categories.getCategories(pool))
 // recipe route
 router.get("/recipes", verifyJwtToken, recipes.getAllRecipes(pool))
 
+router.get("/recipe/:recipe_id", recipe.getRecipeById(pool))
 router.post(
   "/recipe", 
   verifyJwtToken, 
@@ -60,7 +62,20 @@ router.put("/recipe/:recipe_id", verifyJwtToken, recipe.putRecipe(pool))
 router.delete("/recipe/:recipe_id", verifyJwtToken, recipe.deleteRecipe(pool))
 
 router.get("/recipe/:recipe_id/ingredients", verifyJwtToken, ingredients.getIngredientsByRecipeId(pool))
+router.put("/recipe/:recipe_id/ingredients", verifyJwtToken, ingredients.putIngredientsByRecipeId(pool))
+
 router.get("/recipe/:recipe_id/steps", verifyJwtToken, steps.getStepsByRecipeId(pool))
+router.put("/recipe/:recipe_id/steps", verifyJwtToken, steps.putStepsByRecipeId(pool))
+
+router.put(
+  "/recipe/:recipe_id/img", 
+  verifyJwtToken, 
+  recipeMiddleware.recipeAuthorization(pool),
+  upload.single('file'),
+  storageMiddleware.uploadFile(recipeStorageService),
+  recipe.putRecipeImage(pool)
+)
+
 router.get("/recipe/:recipe_id/ratings", verifyJwtToken, ratings.getRatingsByRecipeId(pool))
 router.post("/recipe/:recipe_id/rating", verifyJwtToken, ratings.postRatingByRecipeId(pool))
 router.put("/recipe/:recipe_id/rating", verifyJwtToken, ratings.putRatingByRecipeId(pool))
