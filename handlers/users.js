@@ -61,7 +61,9 @@ function putUserImageHandler(pool) {
     try {
       await pool.query('UPDATE users SET image_url = $1, image_path = $2 WHERE id = $3', [imageUrl, imagePath, userId]);
       
-      if(prev_path || prev_path != "") {
+      // dont delete default images
+      const pattern = /^default\/.+\.(\S{2,})$/
+      if(prev_path && !pattern.test(prev_path)) {
         await userStorage.remove(prev_path)
       }
 
