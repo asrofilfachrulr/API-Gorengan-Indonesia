@@ -2,6 +2,7 @@ const { nanoid } = require("nanoid");
 const { isEmptyString } = require("../utils");
 const userStorage = require("../services/supabase/storage/user");
 const bcrypt = require("bcrypt");
+const {DEFAULT_IMG_URL, DEFAULT_IMG_PATH} = require("../values/default")
 
 function postNewUserHandler(pool) {
   return async (req, res) => {
@@ -120,14 +121,27 @@ function putUserBioHandler(pool){
 function deleteUserImageHandler(pool){
   return async (req, res) => {
     const { userId } = req.user
-    let prevPath
 
     try {
-      const { rows } = await pool.query("SELECT image_path as prev_path FROM users WHERE id = $1", [userId])
+      const { rows } = await pool.query(`
+      WITH OldUser AS (
+        SELECT image_path as prev_path 
+        FROM users 
+        WHERE id = $1
+      )
+      UPDATE users
+      SET image_url = $2, image_path = $3
+      WHERE id = $1
+      RETURNING (SELECT prev_path FROM OldUser) AS prev_path
+      `, [userId, DEFAULT_IMG_URL, DEFAULT_IMG_PATH])
 
       if (rows.length != 0) {
-        prevPath = rows[0].prev_path
-        await userStorage.remove(prev_path)
+        const prevPath = rows[0].prev_path
+        const pattern = /^default\/.+\.(\S{2,})$/
+        
+        if(!pattern.test(prevPath)) {
+          await userStorage.remove(prevPath)
+        }
 
         res.json({
           message: "succeed removing photo profile"
