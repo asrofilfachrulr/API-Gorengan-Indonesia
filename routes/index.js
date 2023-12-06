@@ -42,6 +42,7 @@ router.put(
   storageMiddleware.uploadFile(userStorageService),
   users.putUserImageHandler(pool)
 )
+router.delete("/user/bio/img", verifyJwtToken, users.deleteUserImageHandler(pool))
 router.put("/user/password", verifyJwtToken, auth.resetPassword(pool))
 
 // category route

@@ -51,20 +51,31 @@ function putUserImageHandler(pool) {
       return res.status(500).json({ message: 'Middleware Error!' });
     }
 
-    const { prev_path } = req.query;
-
     const data = req.uploadedData;
     const { userId } = req.user;
     const imagePath = data.path;
     const imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
 
     try {
-      await pool.query('UPDATE users SET image_url = $1, image_path = $2 WHERE id = $3', [imageUrl, imagePath, userId]);
+      const { rows } = await pool.query(`
+      WITH OldUser AS (
+        SELECT image_path as old_image_path
+        FROM users
+        WHERE id = $1
+      )
+      UPDATE users set image_url = $2, image_path = $3 where id = $1 returning (SELECT old_image_path FROM OldUser) AS old_path
+      `, [userId, imageUrl, imagePath]);
       
-      // dont delete default images
-      const pattern = /^default\/.+\.(\S{2,})$/
-      if(prev_path && !pattern.test(prev_path)) {
-        await userStorage.remove(prev_path)
+      
+      // if rows has length 0, skipping old image removal activity
+      if(rows.length != 0) {
+        const prevPath = rows[0].old_path
+  
+        // dont delete default images
+        const pattern = /^default\/.+\.(\S{2,})$/
+        if(!pattern.test(prevPath)) {
+          await userStorage.remove(prevPath)
+        }
       }
 
       res.status(201).json({
@@ -106,9 +117,38 @@ function putUserBioHandler(pool){
   }
 }
 
+function deleteUserImageHandler(pool){
+  return async (req, res) => {
+    const { userId } = req.user
+    let prevPath
+
+    try {
+      const { rows } = await pool.query("SELECT image_path as prev_path FROM users WHERE id = $1", [userId])
+
+      if (rows.length != 0) {
+        prevPath = rows[0].prev_path
+        await userStorage.remove(prev_path)
+
+        res.json({
+          message: "succeed removing photo profile"
+        })
+      } else {
+        res.status(404).json({
+          message: "Unexpected Error: User Not Found"
+        })
+      }
+    } catch (e) {
+      res.status(500).json({
+        message: e.message
+      })
+    }
+  }
+}
+
 module.exports = {
   postNewUserHandler,
   getUserHandler,
   putUserImageHandler,
-  putUserBioHandler
+  putUserBioHandler,
+  deleteUserImageHandler
 };
