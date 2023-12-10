@@ -8,7 +8,7 @@ function verifyJwtToken(req, res, next) {
     return res.status(401).json({ message: 'Authentication token is missing' });
   }
 
-  if(!req.body)
+  if(req.body)
     console.log(`req.body initial= ${JSON.stringify(req.body)}`);
   
   try {
