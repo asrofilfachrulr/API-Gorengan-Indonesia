@@ -48,7 +48,7 @@ function postRecipe(pool) {
     const imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
     const recipeId = `recipe-${nanoid(16)}`
 
-    console.log(`req.body = ${req.body}`)
+    console.log(`req.body = ${JSON.stringify(req.body)}`);
     
     const jsonData = JSON.parse(req.body.json)
 
