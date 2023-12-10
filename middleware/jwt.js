@@ -8,6 +8,9 @@ function verifyJwtToken(req, res, next) {
     return res.status(401).json({ message: 'Authentication token is missing' });
   }
 
+  if(!req.body)
+    console.log(`req.body initial= ${JSON.stringify(req.body)}`);
+  
   try {
     const decoded = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY); // Verify and decode the token
     req.user = decoded; // Store the decoded user data in the request object
