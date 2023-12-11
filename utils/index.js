@@ -16,5 +16,5 @@ const fileDateFormat = (date) => {
 
 module.exports = {
   fileDateFormat,
-
+  isEmptyString
 }
