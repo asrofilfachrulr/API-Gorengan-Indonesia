@@ -49,7 +49,8 @@ function postRecipe(pool) {
     const recipeId = `recipe-${nanoid(16)}`
 
     let jsonData
-    
+    let client
+
     try {
       console.log(`req.body = ${JSON.stringify(req.body)}`);
       
@@ -57,11 +58,11 @@ function postRecipe(pool) {
   
       const { title, category, difficulty, portion, minute_duration, ingredients, steps } = jsonData
 
+      client = await pool.connect()
 
       // id, author_id, title, category, image_url, difficulty, portion, minute_duration, stars, image_path
-      await pool.query("INSERT INTO recipes VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
-        [recipeId, userId, title, category.toLowerCase(), imageUrl, difficulty.toLowerCase(), portion, minute_duration, 0, imagePath]
-      )
+      const recipeQuery = "INSERT INTO recipes VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+      const recipeParams = [recipeId, userId, title, category.toLowerCase(), imageUrl, difficulty.toLowerCase(), portion, minute_duration, 0, imagePath]
 
       // recipe_id, qty, unit, name
       let ingredientsQuery = "INSERT INTO ingredients VALUES "
@@ -81,8 +82,6 @@ function postRecipe(pool) {
         return [it.qty, it.unit, it.name]
       }))
 
-      await pool.query(ingredientsQuery, ingredientsParams)
-
       // recipe_id, number, step
       let stepsQuery = "INSERT INTO steps VALUES "
 
@@ -101,7 +100,16 @@ function postRecipe(pool) {
         return [it.number, it.step]
       }))
 
-      await pool.query(stepsQuery, stepsParams)
+      await client.query("BEGIN")
+
+      await client.query(recipeQuery, recipeParams)
+      
+      await Promise.all([
+        client.query(ingredientsQuery, ingredientsParams),
+        client.query(stepsQuery, stepsParams)
+      ])
+
+      await client.query("COMMIT")
 
       const { rows } = await pool.query("SELECT * FROM recipes WHERE id = $1", [recipeId])
 
@@ -110,8 +118,10 @@ function postRecipe(pool) {
         data: rows
       })
     } catch (e) {
-      await recipeService.remove(imagePath)
-      await pool.query("DELETE FROM recipes WHERE id = $1", [recipeId])
+      await Promise.all([
+        client.query("ROLLBACK"),
+        recipeService.remove(imagePath)
+      ])
 
       res.status(500).json({
         message: e.message,
@@ -290,11 +300,14 @@ function putRecipe(pool){
       })
 
     } catch (e) {
+      const promises = []
       if(client)
-        await client.query("ROLLBACK")
+        promises.push(client.query("ROLLBACK"))
 
       if(data)
-        recipeService.remove(imagePath)
+        promises.push(recipeService.remove(imagePath))
+
+      await Promise.all(promises)
 
       res.status(500).json({
         message: e.message,
