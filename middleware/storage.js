@@ -22,6 +22,16 @@ function uploadFile(service){
   }
 }
 
+function uploadOptionalFile(service) {
+  return async (req, res, next) => {
+    const file = req.file
+    if(file) {
+      await uploadFile(service)(req, res, next)
+    } else next()
+  }
+}
+
 module.exports = {
-  uploadFile
+  uploadFile,
+  uploadOptionalFile
 }

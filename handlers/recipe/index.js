@@ -48,13 +48,16 @@ function postRecipe(pool) {
     const imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
     const recipeId = `recipe-${nanoid(16)}`
 
-    console.log(`req.body = ${JSON.stringify(req.body)}`);
+    let jsonData
     
-    const jsonData = JSON.parse(req.body.json)
-
-    const { title, category, difficulty, portion, minute_duration, ingredients, steps } = jsonData
-
     try {
+      console.log(`req.body = ${JSON.stringify(req.body)}`);
+      
+      jsonData = JSON.parse(req.body.json)
+  
+      const { title, category, difficulty, portion, minute_duration, ingredients, steps } = jsonData
+
+
       // id, author_id, title, category, image_url, difficulty, portion, minute_duration, stars, image_path
       await pool.query("INSERT INTO recipes VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
         [recipeId, userId, title, category.toLowerCase(), imageUrl, difficulty.toLowerCase(), portion, minute_duration, 0, imagePath]
@@ -118,7 +121,7 @@ function postRecipe(pool) {
   }
 }
 
-function putRecipe(pool) {
+function putRecipe(pool){
   return async (req, res) => {
     const { userId } = req.user
     const { recipe_id } = req.params
@@ -130,23 +133,176 @@ function putRecipe(pool) {
       return
     }
 
-    const { title, category, difficulty, portion, minute_duration } = req.body
+    const data = req.uploadedData
+    let imagePath, imageUrl
+
+    if(data){
+      imagePath = data.path;
+      imageUrl = `${process.env.SUPABASE_STORAGE_URL_PREFIX}${data.fullPath}`;
+    }
+
+    
+    let client
+    let jsonData
 
     try {
-      const { rowCount } = await pool.query("UPDATE recipes SET title = $1, category = $2, difficulty = $3, portion = $4, minute_duration = $5 WHERE id = $6 AND author_id = $7", [title, category.toLowerCase(), difficulty.toLowerCase(), portion, minute_duration, recipe_id, userId])
+      jsonData = JSON.parse(req.body.json)
+  
+      const { title, category, difficulty, portion, minute_duration, ingredients, steps } = jsonData
+
+      client = await pool.connect()
+      
+      /*
+      *   Updating Recipe on recipes Table
+      */
+
+      let recipeQuery = `
+        WITH OldRecipe AS (
+          SELECT image_path as old_image_path
+          FROM recipes
+          WHERE id = $1
+        )
+        UPDATE recipes SET
+          title = $2,
+          category = $3,
+          difficulty = $4,
+          portion = $5,
+          minute_duration = $6
+          ${imageUrl ? 
+            `, img_url = $7, 
+              image_path = $8` 
+          : ''}
+          WHERE id = $1
+      `
+
+      let recipeParams = [recipe_id, title, category, difficulty, portion, minute_duration]
+
+      if(imageUrl){
+        recipeQuery += ` AND author_id = $9 `
+        recipeParams.push(imageUrl, imagePath)
+      } else {
+        recipeQuery += ` AND author_id = $7 `
+      }
+
+      // either case, push param at the end
+      recipeParams.push(userId)
+
+      recipeQuery += "RETURNING (SELECT old_image_path FROM OldRecipe) AS old_path"
+
+      /*
+      *   Updating Ingredients
+      */
+
+      const deleteIngredientsQuery = `
+      DELETE FROM ingredients 
+      WHERE 
+        recipe_id = $1 AND 
+        (SELECT author_id FROM recipes WHERE id = $1) = $2
+      `
+      const deleteIngredientsParams = [recipe_id, userId]
+
+      let ingredientsQuery = "INSERT INTO ingredients VALUES "
+      
+      let placeholder = 1
+      for (let i = 0; i < ingredients.length; i++) {
+        ingredientsQuery += `($1, $${++placeholder}, $${++placeholder}, $${++placeholder})`
+
+        if (i < ingredients.length - 1)
+          ingredientsQuery += ", "
+      }
+
+      const ingredientsParams = [recipe_id]
+      ingredientsParams.push(...ingredients.flatMap(it => {
+        if (!it.qty || !it.unit || !it.name)
+          throw new Error("missing required attribute(s)!")
+        return [it.qty, it.unit, it.name]
+      }))
+      
+      /*
+      *   Updating Steps
+      */
+
+      const deleteStepsQuery = `
+      DELETE FROM STEPS
+      WHERE
+        recipe_id = $1 AND
+        (SELECT author_id FROM recipes WHERE id = $1) = $2`
+
+      const deleteStepsParams = [recipe_id, userId]
+      
+      let stepsQuery = "INSERT INTO steps VALUES "
+
+      placeholder = 1
+      for (let i = 0; i < steps.length; i++) {
+        stepsQuery += `($1, $${++placeholder}, $${++placeholder})`
+
+        if (i < steps.length - 1)
+          stepsQuery += ", "
+      }
+
+      const stepsParams = [recipe_id]
+      stepsParams.push(...steps.flatMap(it => {
+        if (!it.number || !it.step)
+          throw new Error("missing required attribute(s)!")
+        return [it.number, it.step]
+      }))
+
+      /*
+      * SQL Execution
+      */
+      await client.query("BEGIN")
+      
+      // recipe
+      const recipeResult = await client.query(recipeQuery, recipeParams)
+      if(recipeResult.rowCount == 0)
+        throw new Error("Failed to update recipe")
+
+      const { old_path : oldPath } = recipeResult.rows[0]
+      if(!oldPath)
+        throw new Error("Failed retrieving old data")
+
+      // ingredients
+      await client.query(deleteIngredientsQuery, deleteIngredientsParams)
+
+      const ingredientsResult = await client.query(ingredientsQuery, ingredientsParams)
+      if(ingredientsResult.rowCount < ingredients.length && ingredients.length > 0)
+        throw new Error(`Failed to update ingredients; rc: ${ingredientsResult.rowCount} out of ${ingredients.length}`)
+
+      // steps
+      await client.query(deleteStepsQuery, deleteStepsParams)
+
+      const stepsResult = await client.query(stepsQuery, stepsParams)
+      if(stepsResult.rowCount < steps.length && steps.length > 0)
+        throw new Error(`Failed to update steps; rc: ${stepsResult.rowCount} out of ${steps.length}`)
+
+      await client.query("COMMIT")
+
+      if(data)
+        await recipeService.remove(oldPath)
 
       res.json({
-        message: `recipe with id ${recipe_id} is updated`,
-        rowCount
+        message: "success updating recipe",
+        rowCount:{
+          "recipes": recipeResult.rowCount,
+          "ingredients": ingredientsResult.rowCount,
+          "steps": stepsResult.rowCount
+        }
       })
+
     } catch (e) {
+      if(client)
+        await client.query("ROLLBACK")
+
+      if(data)
+        recipeService.remove(imagePath)
+
       res.status(500).json({
-        message: e.message
+        message: e.message,
+        body: jsonData 
       })
     }
   }
 }
-
 
 function deleteRecipe(pool) {
   return async (req, res) => {

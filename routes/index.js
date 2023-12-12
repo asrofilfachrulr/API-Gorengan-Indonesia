@@ -59,7 +59,14 @@ router.post(
   storageMiddleware.uploadFile(recipeStorageService),
   recipe.postRecipe(pool)
 )
-router.put("/recipe/:recipe_id", verifyJwtToken, recipe.putRecipe(pool))
+router.put(
+  "/recipe/:recipe_id", 
+  verifyJwtToken, 
+  recipeMiddleware.recipeAuthorization(pool),
+  upload.single('file'),
+  storageMiddleware.uploadOptionalFile(recipeStorageService),
+  recipe.putRecipe(pool)
+)
 router.delete("/recipe/:recipe_id", verifyJwtToken, recipe.deleteRecipe(pool))
 
 router.get("/recipe/:recipe_id/ingredients", verifyJwtToken, ingredients.getIngredientsByRecipeId(pool))
