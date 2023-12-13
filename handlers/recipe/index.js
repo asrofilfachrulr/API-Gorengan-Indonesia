@@ -77,7 +77,7 @@ function postRecipe(pool) {
 
       const ingredientsParams = [recipeId]
       ingredientsParams.push(...ingredients.flatMap(it => {
-        if (!it.qty || !it.unit || !it.name)
+        if (!it.hasOwnProperty("qty") || !it.hasOwnProperty("unit") || !it.name)
           throw new Error("missing required attribute(s)!")
         return [it.qty, it.unit, it.name]
       }))
@@ -223,7 +223,7 @@ function putRecipe(pool){
 
       const ingredientsParams = [recipe_id]
       ingredientsParams.push(...ingredients.flatMap(it => {
-        if (!it.qty || !it.unit || !it.name)
+        if (!it.hasOwnProperty("qty") || !it.hasOwnProperty("unit") || !it.name)
           throw new Error("missing required attribute(s)!")
         return [it.qty, it.unit, it.name]
       }))
