@@ -1,7 +1,7 @@
 function getCategories(pool){
   return async (req, res) => {
     try {
-      const { rows } = await pool.query("SELECT distinct(category) FROM recipes")
+      const { rows } = await pool.query("SELECT distinct LOWER(category) FROM recipes")
 
       res.json({
         message: "success retrieved categories",
