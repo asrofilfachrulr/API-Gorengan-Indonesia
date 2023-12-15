@@ -92,7 +92,7 @@ router.post("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.postFavour
 router.delete("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.deleteFavourite(pool))
 
 router.get("/recipe/:recipe_id/view_count", verifyJwtToken, recipe.getViewCount(pool))
-router.put("/recipe/:recipe_id/view_count", verifyJwtToken, recipe.putRecipe(pool))
+router.put("/recipe/:recipe_id/view_count", verifyJwtToken, recipe.addViewCount(pool))
 
 router.get("/favourites", verifyJwtToken, favourites.getAllFavourites(pool))
 
