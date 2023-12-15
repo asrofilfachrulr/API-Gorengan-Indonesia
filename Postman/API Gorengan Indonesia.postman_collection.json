@@ -616,7 +616,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "foto-asrofil.jpg"
+									"src": []
 								},
 								{
 									"key": "Content-Type",
@@ -627,7 +627,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/user/bio/img?prev_path={{prev_path}}",
+							"raw": "{{url}}/user/bio/img",
 							"host": [
 								"{{url}}"
 							],
@@ -639,7 +639,8 @@
 							"query": [
 								{
 									"key": "prev_path",
-									"value": "{{prev_path}}"
+									"value": "default/user-512.png",
+									"disabled": true
 								}
 							]
 						}
@@ -687,6 +688,45 @@
 								}
 							]
 						},
+						"url": {
+							"raw": "{{url}}/user/bio/img",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"bio",
+								"img"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Image User PNG [Asrofil]",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_asrofil}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "image/jpeg",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "{{url}}/user/bio/img",
 							"host": [
@@ -1642,13 +1682,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/recipe/receipt-10/steps",
+							"raw": "{{url}}/recipe/recipe-_idggW8pmSUokTov/steps",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"recipe",
-								"receipt-10",
+								"recipe-_idggW8pmSUokTov",
 								"steps"
 							],
 							"query": [
@@ -1679,7 +1719,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"steps\": [\n        {\n            \"number\": 1,\n            \"step\": \"one\"\n        },\n        {\n            \"number\": 2,\n            \"step\": \"two\"\n        },\n        {\n            \"number\": 3,\n            \"step\": \"three\"\n        },\n        {\n            \"number\": 4,\n            \"step\": \"four\"\n        },\n        {\n            \"number\": 5,\n            \"step\": \"five\"\n        },\n        {\n            \"number\": 6,\n            \"step\": \"six\"\n        },\n        {\n            \"number\": 7,\n            \"step\": \"seven\"\n        }\n    ]\n}",
+							"raw": "{\n    \"steps\": [\n        {\n            \"number\": 1,\n            \"step\": \"one\"\n        },\n        {\n            \"number\": 2,\n            \"step\": \"two\"\n        },\n        {\n            \"number\": 4,\n            \"step\": \"four\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1738,9 +1778,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{devUrl}}/recipe",
+							"raw": "{{url}}/recipe",
 							"host": [
-								"{{devUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"recipe"
@@ -1750,7 +1790,7 @@
 					"response": []
 				},
 				{
-					"name": "PUT Created Recipe [Asrofil]",
+					"name": "POST Invalid New Recipe [Asrofil]",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1762,32 +1802,37 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Martabak Daging Bayam\",\n    \"category\": \"isian daging\",\n    \"difficulty\": \"sulit\",\n    \"portion\": 4,\n    \"minute_duration\": 15\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "Martabak-Telor-Bayam.jpg"
+								},
+								{
+									"key": "json",
+									"value": "{\n    \"title\": \"Martabak Telor Bayam\", \n    \"category\": \"Isian Daging\", \n    \"difficulty\": \"sulit\", \n    \"portion\": 4, \n    \"minute_duration\": 15,\n    \"ingredients\": [\n        {\"unit\": \"lbr\", \"name\": \"kulit lumpia\"},\n        {\"qty\": 200, \"unit\": \"gr\", \"name\": \"daging sapi cincang\"},\n        {\"qty\": 80, \"unit\": \"gr\", \"name\": \"bawang bombay, cincang halus\"},\n        {\"qty\": 2, \"unit\": \"siung\", \"name\": \"bawang putih, cincang halus\"},\n        {\"qty\": 70, \"unit\": \"gr\", \"name\": \"daun bayam hijau\"},\n        {\"qty\": 3, \"unit\": \"lbr\", \"name\": \"daun jeruk\"},\n        {\"qty\": 2, \"unit\": \"sdt\", \"name\": \"kari bubuk\"},\n        {\"qty\": 1, \"unit\": \"btg\", \"name\": \"serai, memarkan\"},\n        {\"qty\": 1.5, \"unit\": \"sdt\", \"name\": \"Royco Kaldu Sapi\"},\n        {\"qty\": 0.5, \"unit\": \"sdt\", \"name\": \"merica putih bubuk\"},\n        {\"qty\": 2, \"unit\": \"btr\", \"name\": \"telur ayam\"},\n        {\"qty\": 2, \"unit\": \"btg\", \"name\": \"daun bawang, iris tipis\"}\n    ],\n    \"steps\": [\n        {\"number\": 1, \"step\": \"Untuk isian, Panaskan 2 sdm minyak, tumis bawang bombay dan bawang putih hingga harum. Masukkan daging, aduk hingga berubah warna. Masukkan daun jeruk, kari bubuk, serai, Royco Kaldu Sapi, dan merica, aduk rata.\"},\n        {\"number\": 2, \"step\": \"Masak hingga daging matang. Masukkan bayam, aduk hingga bayam layu. Angkat. Sisihkan. Setelah tidak panas, aduk rata bersama daun bawang dan telur ayam.\"},\n        {\"number\": 3, \"step\": \"Siapkan kulit lumpia, ambil 1 sdm adonan isi ke bagian tengahnya. Lipat membentuk amplop dengan rapi, rekatkan dengan air. Ulangi proses serupa pada sisa bahan hingga habis.\"},\n        {\"number\": 4, \"step\": \"Panaskan minyak, goreng martabak sambil siram minyak ke permukaannya hingga martabak kecokelatan dan garing. Angkat. Sajikan.\"}\n    ]\n}",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{devUrl}}/recipe/recipe-AaMcklYM5BZ7CPa4",
+							"raw": "{{url}}/recipe",
 							"host": [
-								"{{devUrl}}"
+								"{{url}}"
 							],
 							"path": [
-								"recipe",
-								"recipe-AaMcklYM5BZ7CPa4"
+								"recipe"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "PUT Image of Created Recipe [Asrofil]",
+					"name": "PUT New Recipe [Asrofil]",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1807,25 +1852,23 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "Martabak-Telor-Bayam.jpg"
+									"src": "martabak-Telur-Bayam(1).jpg"
+								},
+								{
+									"key": "json",
+									"value": "{\n    \"title\": \"Martabak Telor Bayam Tebal\", \n    \"category\": \"Isian Telur\", \n    \"difficulty\": \"sulit\", \n    \"portion\": 2, \n    \"minute_duration\": 20,\n    \"ingredients\": [\n        {\"qty\": 120, \"unit\": \"lbr\", \"name\": \"kulit lumpia\"},\n        {\"qty\": 200, \"unit\": \"gr\", \"name\": \"daging sapi cincang\"}\n    ],\n    \"steps\": [\n        {\"number\": 1, \"step\": \"Panaskan 2 sdm minyak, tumis bawang bombay dan bawang putih hingga harum. Masukkan daging, aduk hingga berubah warna. Masukkan daun jeruk, kari bubuk, serai, Royco Kaldu Sapi, dan merica, aduk rata.\"},\n        {\"number\": 3, \"step\": \"Siapkan kulit lumpia, ambil 1 sdm adonan isi ke bagian tengahnya. Lipat membentuk amplop dengan rapi, rekatkan dengan air. Ulangi proses serupa pada sisa bahan hingga habis.\"},\n        {\"number\": 4, \"step\": \"Panaskan minyak, goreng martabak sambil siram minyak ke permukaannya hingga martabak kecokelatan dan garing. Angkat. Sajikan.\"}\n    ]\n}",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{devUrl}}/recipe/recipe-A5oYSLamP_G14d5D/img?prev_path=recipe/20231203_17:47:41__iiWkp.jpg",
+							"raw": "{{url}}/recipe/recipe-fky_3I5hnT9RHiLM",
 							"host": [
-								"{{devUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"recipe",
-								"recipe-A5oYSLamP_G14d5D",
-								"img"
-							],
-							"query": [
-								{
-									"key": "prev_path",
-									"value": "recipe/20231203_17:47:41__iiWkp.jpg"
-								}
+								"recipe-fky_3I5hnT9RHiLM"
 							]
 						}
 					},
@@ -1847,13 +1890,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{devUrl}}/recipe/recipe-AaMcklYM5BZ7CPa4",
+							"raw": "{{url}}/recipe/recipe-fky_3I5hnT9RHiLM",
 							"host": [
-								"{{devUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"recipe",
-								"recipe-AaMcklYM5BZ7CPa4"
+								"recipe-fky_3I5hnT9RHiLM"
 							]
 						}
 					},

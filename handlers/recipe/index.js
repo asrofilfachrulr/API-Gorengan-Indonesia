@@ -390,10 +390,49 @@ function putRecipeImage(pool) {
   }
 }
 
+function addViewCount(pool){
+  return async (req, res) => {
+    const { recipe_id } = req.params
+    try {
+      await pool.query("UPDATE recipes SET view_count = view_count + 1 WHERE id = $1", [recipe_id])
+
+      res.json({
+        message: "success"
+      })
+    } catch (e){
+      res.status(500).json({
+        message: e.message
+      })
+    }
+  }
+}
+
+function getViewCount(pool){
+  return async (req, res) => {
+    const { recipe_id } = req. params
+    try {
+      const {rows} = await pool.query("SELECT view_count FROM recipes WHERE id = $1", [recipe_id]);
+
+      res.json({
+        message: "success",
+        data: {
+          view_count: rows.length > 0 ? rows[0]["row_count"] : 0
+        }
+      })
+    } catch (e){
+      res.status(500).json({
+        message: e.message
+      })
+    }
+  }
+}
+
 module.exports = {
   postRecipe,
   putRecipe,
   deleteRecipe,
   getRecipeById,
-  putRecipeImage
+  putRecipeImage,
+  addViewCount,
+  getViewCount
 }
