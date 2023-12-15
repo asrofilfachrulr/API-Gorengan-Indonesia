@@ -91,6 +91,9 @@ router.delete("/recipe/:recipe_id/rating", verifyJwtToken, ratings.deleteRatingB
 router.post("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.postFavourite(pool))
 router.delete("/recipe/:recipe_id/favourite", verifyJwtToken, favourite.deleteFavourite(pool))
 
+router.get("/recipe/:recipe_id/view_count", verifyJwtToken, recipe.getViewCount(pool))
+router.put("/recipe/:recipe_id/view_count", verifyJwtToken, recipe.putRecipe(pool))
+
 router.get("/favourites", verifyJwtToken, favourites.getAllFavourites(pool))
 
 router.get("/test/storage/uploadImg", testStorage.testUploadImg)
