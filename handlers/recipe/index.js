@@ -416,7 +416,7 @@ function getViewCount(pool){
       res.json({
         message: "success",
         data: {
-          view_count: rows.length > 0 ? rows[0]["view_count"] : 0
+          view_count: rows.length > 0 ? rows[0] : 0
         }
       })
     } catch (e){
