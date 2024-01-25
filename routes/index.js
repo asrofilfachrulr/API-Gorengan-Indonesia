@@ -49,7 +49,8 @@ router.put("/user/password", verifyJwtToken, auth.resetPassword(pool))
 router.get("/categories", categories.getCategories(pool))
 
 // recipe route
-router.get("/recipes", verifyJwtToken, recipes.getAllRecipes(pool))
+// router.get("/recipes", verifyJwtToken, recipes.getAllRecipes(pool))
+router.get("/recipes", recipes.getAllRecipes(pool))
 
 router.get("/recipe/:recipe_id", recipe.getRecipeById(pool))
 router.post(
